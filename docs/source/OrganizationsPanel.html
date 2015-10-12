@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='app-views-OrganizationsPanel'>/**
+</span> *    Organizations.js	
+ *    
+ *    Created by Jerzy Błaszczyk on 2011-09-01.
+ *    Copyright 2011 Client and Friends. All rights reserved.
+ **/
+
+app.views.OrganizationsPanel = Ext.extend(Ext.Panel, {
+	className: 'OrganizationsPanel',
+
+	iconCls: 'team',
+	title: 'Organizations',
+	layout: 'card',
+
+	initComponent: function() {
+		this.items = [{
+			xtype: 'OrganizationsList'
+		}];
+
+		app.views.OrganizationsPanel.superclass.initComponent.apply(this, arguments);
+	}
+});
+
+Ext.reg('OrganizationsPanel', app.views.OrganizationsPanel);
+</pre>
+</body>
+</html>

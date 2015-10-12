@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='app-views-ActivitiesPanel'>/**
+</span>*    Activities.js	
+*    
+*    Created by Jerzy Błaszczyk on 2011-09-01.
+*    Copyright 2011 Client and Friends. All rights reserved.
+**/
+
+app.views.ActivitiesPanel = Ext.extend(Ext.Panel, {
+
+    className: 'ActivitiesPanel',
+
+    iconCls: 'time',
+    title: 'Activities',
+    layout: 'card',
+
+    xlisteners: {
+        activate: function() {
+            this.updateData(null, true);
+        }
+    },
+
+    initComponent: function() {
+   
+        this.activityInfo = new app.views.ActivityInfo({
+            flex: 3
+        });
+
+        this.activitiesList = new app.views.ActivitiesList({
+            flex: 2
+        });
+
+        //this.activitiesList.filterFunction = app.stores.Activity.clearFilter;
+
+        this.activitiesList.down('#filterToolbar').hidden = false;
+
+        this.todayView = new Ext.Panel({
+            layout: {
+                type: 'hbox',
+                align: 'stretch'
+            },
+            items: [this.activitiesList, this.activityInfo]
+        });
+
+
+        if (Ext.is.Phone) {
+            this.items = [this.activitiesList];
+        } else {
+            this.items = [this.todayView];
+        };
+
+        app.views.ActivitiesPanel.superclass.initComponent.apply(this, arguments);
+    },
+
+    updateData: function(record, filter) {
+
+        app.log('ActivitiesTab updateData with record : ' + record);
+
+        this.activitiesList.updateData(record, filter);
+
+        record = this.activitiesList.getSelectedRecord();
+
+        if (!record) {
+            record = this.activitiesList.getAt(0);
+        }
+
+        if (record) {
+            this.activityInfo.updateWithRecord(record);
+        }
+    }
+
+});
+
+Ext.reg('ActivitiesPanel', app.views.ActivitiesPanel);
+
+
+</pre>
+</body>
+</html>

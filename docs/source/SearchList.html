@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js">app.utils.SearchList = Ext.extend(Ext.Panel, {
+    floating: true,
+    stopMaskTapEvent: false,
+    hideOnMaskTap: true,
+    cls: 'x-select-overlay',
+    scroll: 'vertical',
+    dockedItems: [{
+        xtype: 'toolbar',
+        dock: 'top',
+        layout: {
+            type: 'fit',
+            align: 'stretch'
+        },
+
+        items: [{
+            xtype: 'searchfield',
+            itemId: 'search',
+            useClearIcon: false,
+            listeners: {
+                scope: this,
+
+                el: {
+                    scope: this,
+                    search: function(e) {
+                        if (e.target.value == '') {
+                            this.store.clearFilter(false);
+                        }
+                    },
+                    delegate: '.x-input-search'
+                },
+
+                keyup: function(field) {
+
+                    var value = field.getValue();
+
+                    if (!value) {
+                        this.store.clearFilter(true);
+                    } else {
+                        var searches = value.split(' '),
+                        regexps = [],
+                        i;
+
+                        for (i = 0; i &lt; searches.length; i++) {
+                            if (!searches[i]) {
+                                return;
+                            }
+                            regexps.push(new RegExp(searches[i],
+                            'i'));
+                        };
+
+                        this.store.filterBy(function(record) {
+                            var matched = [];
+
+                            for (i = 0; i &lt; regexps.length; i++) {
+                                var search = regexps[i];
+
+                                if (record.get('name').match(search)) {
+                                    matched.push(true);
+                                }
+                                else {
+                                    matched.push(false);
+                                }
+                            };
+
+                            if (regexps.length &gt; 1
+                            &amp;&amp; matched.indexOf(false) != -1) {
+                                return false;
+                            } else {
+                                return matched[0];
+                            }
+                        });
+
+                        this.scroller.scrollTo({
+                            x: 0,
+                            y: 0
+                        });
+                    }
+                }
+            }
+        }]
+    }],
+    items: {
+        xtype: 'list',
+        store: this.store,
+        itemId: 'list',
+        scroll: false,
+        grouped: true,
+        indexBar: true,
+        itemTpl: [
+        '&lt;span class=&quot;x-list-label&quot;&gt; {' + this.displayField
+        + '}&lt;/span&gt;',
+        '&lt;span class=&quot;x-list-selected&quot;&gt;&lt;/span&gt;'],
+        listeners: {
+            select: this.onListSelect,
+            //afterrender: this.onAfterRender,
+            change: function() {
+                this.fireEvent('change', arguments);
+            },
+            scope: this
+        }
+    }
+});</pre>
+</body>
+</html>

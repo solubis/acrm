@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-ns'>/**
+</span>* Script name:	DynamicMvc
+* 
+* Description:	This script will dynamically load controllers and views files;
+* 				Full description can be found here:
+* 				http://www.onlinesolutionsdevelopment.com/blog/web-development/javascript/loading-sencha-touch-controllers-and-view-files-dynamically/
+* 
+* Author:		CAM
+* Author URL:	http://www.onlinesolutionsdevelopment.com/blog/
+*/
+
+Ext.ns('app.utils.DynamicMvc');
+
+app.utils.DynamicMvc.init = function()
+{
+	// before dispatch
+	Ext.Dispatcher.on('before-dispatch', function(interaction)
+	{
+		var route = interaction.historyUrl;
+		//
+		if ( ! route)
+		{
+			return true;
+		}
+		//
+		this.dispatchOptions = Ext.Router.recognize(route);
+		this.dispatchOptions = Ext.applyIf(this.dispatchOptions, interaction);
+		//
+		var controller = this.dispatchOptions.controller;
+		var action = interaction.action;
+		//
+		var actionView = this.getViewName(controller, action);
+		
+		// Check the existence of the view
+		if ( ! Ext.ComponentMgr.isRegistered(actionView))
+		{
+			var actionViewFile = this.getViewFile(actionView, controller);
+			
+			// load view file
+			this.loadScriptFile(actionViewFile, function()
+			{
+				// Check the existence of the controller
+				if ( ! interaction.controller)
+				{
+					this.loadControllerFile(controller);
+				}
+				else // dispatch
+				{
+					Ext.dispatch(this.dispatchOptions);
+				}
+			}, this);
+			
+			return false;
+		}
+		// Check the existence of the controller
+		else if ( ! interaction.controller)
+		{
+			this.loadControllerFile(controller);
+			
+			return false;
+		}
+	}, this);
+}
+
+<span id='global-method-getViewName'>/**
+</span> * Helper functions.
+ */
+Ext.ux.DynamicMvc.getViewName = function(controller, action)
+{
+	return controller + action.charAt(0).toUpperCase() + action.substr(1);
+}
+<span id='global-method-getViewFile'>/**/
+</span>Ext.ux.DynamicMvc.getViewFile = function(viewName, controller)
+{
+	return 'app/views/'+ controller.toLowerCase() + '/' + viewName + 'View.js';
+}
+<span id='global-method-getControllerFile'>/**/
+</span>Ext.ux.DynamicMvc.getControllerFile = function(controller)
+{
+	return 'app/controllers/'+ controller +'Controller.js';
+}
+
+<span id='global-method-loadControllerFile'>/**
+</span> * Loads the controller file.
+ */
+Ext.ux.DynamicMvc.loadControllerFile = function(controller)
+{
+	var controllerFile = this.getControllerFile(controller);
+	
+	this.loadScriptFile(controllerFile, function(){
+		Ext.dispatch(this.dispatchOptions);
+	}, this);
+}
+
+<span id='global-method-loadScriptFile'>/**
+</span> * Loads the script file.
+ */
+Ext.ux.DynamicMvc.loadScriptFile = function(url, callback, scope)
+{
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+
+    script.onload = function(){
+    	callback.call(scope);
+    };
+
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+Ext.ux.DynamicMvc.init();</pre>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='app-views-ActivityInfo'>/**
+</span>*    ActivityInfo.js	
+*    
+*    Created by Jerzy Błaszczyk on 2011-09-01.
+*    Copyright 2011 Client and Friends. All rights reserved.
+**/
+
+app.views.ActivityInfo = Ext.extend(Ext.Panel, {
+
+    className: 'ActivityInfo',
+
+    scroll: 'vertical',
+    layout: {
+        type: 'vbox',
+        align: 'stretch'
+    },
+    cls: 'activity-info',
+
+    initComponent: function() {
+
+        this.record = Ext.ModelMgr.create({},
+        'Activity');
+
+        this.dockedItems = [{
+            xtype: 'toolbar',
+            title: 'Activity',
+            ui: 'dark',
+            layout: {
+                pack: 'right'
+            },
+            items: [{
+                text: 'Back',
+                ui: 'back',
+                hidden: !Ext.is.Phone,
+                scope: this,
+                handler: function() {
+                    Ext.dispatch({
+                        controller: app.currentTab.controller,
+                        action: 'showPreviousItem'
+                    });
+                }
+            },
+            {
+                xtype: 'spacer'
+            }]
+        }];
+
+        this.activityInfo = new Ext.Panel({
+            tpl: new Ext.XTemplate(
+            '&lt;div style=&quot;padding-right:2em;&quot;&gt;&lt;h3&gt;{[values.purpose.get(&quot;name&quot;)]} at &lt;small&gt;{[values.organization.get(&quot;name&quot;)]}&lt;/small&gt;&lt;/h3&gt;',
+            '&lt;h4&gt;Scheduled from {[app.utils.dateTimeFormat(values.startDate)]} &lt;br/&gt;to {[app.utils.dateTimeFormat(values.endDate)]}&lt;/h4&gt;',
+            '{[values.type.get(&quot;name&quot;)]} / {[values.status.get(&quot;name&quot;)]}',
+            '&lt;img src=&quot;images/{[values.status.get(&quot;name&quot;)]}.png&quot; style=&quot;margin-left: 10px;margin-bottom:-3px;&quot;/&gt;&lt;/div&gt;',
+            '&lt;div class = &quot;blueArrow&quot; /&gt;'),
+            styleHtmlContent: true,
+            style: 'width: 100%;',
+            listeners: {
+
+                body: {
+                    click: function() {
+
+                        Ext.dispatch({
+                            controller: app.currentTab.controller,
+                            action: 'editActivity'
+                        });
+
+                    },
+                    delegate: '.blueArrow'
+                }
+            }
+        });
+
+        this.companyHeader = {
+            xtype: 'toolbar',
+            title: 'Organization',
+            ui: 'gray',
+            cls: 'x-list-header'
+        };
+
+        this.companyInfo = new Ext.Panel({
+            tpl: new Ext.XTemplate(
+            '&lt;div style=&quot;padding-right:2em;&quot;&gt;&lt;h3&gt;{[values.organization.get(&quot;name&quot;)]} ',
+            '&lt;small&gt;{[values.organization.get(&quot;type&quot;)]} / {[values.organization.get(&quot;status&quot;)]}&lt;/small&gt;&lt;/h3&gt;',
+            '&lt;h4&gt;{[this.getAddressString(values)]}&lt;/h4&gt;',
+            '&lt;h4&gt;{[this.getPhonesString(values)]}&lt;/h4&gt; ',
+            '&lt;h4&gt;{[this.getEmailString(values)]}&lt;/h4&gt;&lt;/div&gt;',
+            '&lt;div class=&quot;blueArrow&quot;/&gt;',
+            {
+                compiled: true,
+
+                getAddressString: function(values) {
+
+                    var a = values.organization
+                    .get('address'),
+                    b = values.organization
+                    .get('city'),
+                    c = values.organization
+                    .get('postalCode');
+
+                    return app.utils.getCSV(a, b, c);
+                },
+
+                getPhonesString: function(values) {
+
+                    if (!values.organization.get('phone') &amp;&amp; !values.organization.get('mobile'))
+                    return '';
+
+                    var a,
+                    b;
+
+                    if (Ext.is.Phone) {
+                        a = '&lt;a href=&quot;tel:' + values.organization
+                        .get('phone') + '&quot;&gt;' + values.organization
+                        .get('phone') + &quot;&lt;/a&gt;&quot;;
+                        b = '&lt;a href=&quot;tel:' + values.organization
+                        .get('mobile') + '&quot;&gt;' + values.organization
+                        .get('mobile') + &quot;&lt;/a&gt;&quot;;
+                    } else {
+                        a = values.organization
+                        .get('phone');
+                        b = values.organization
+                        .get('mobile');
+                    }
+
+                    return 'Phones: ' + a + (values.organization
+                    .get('mobile') ? ', ' + b: '');
+                },
+
+                getEmailString: function(values) {
+                    if (!values.organization.get('email'))
+                    return '';
+
+                    var result = 'Email: &lt;a href=&quot;mailto:' + values.organization.get(&quot;email&quot;) + '&quot;&gt;' + values.organization.get(&quot;email&quot;) +
+                    '&lt;/a&gt;';
+
+                    return result;
+                }
+
+            }),
+            styleHtmlContent: true,
+            style: 'width: 100%;',
+            listeners: {
+
+                body: {
+                    click: function() {
+
+                        Ext.dispatch({
+                            controller: app.currentTab.controller,
+                            action: 'showOrganization'
+
+                        });
+                    },
+                    delegate: '.blueArrow'
+                }
+            }
+        });
+
+        this.productsHeader = {
+            xtype: 'toolbar',
+            title: 'Products',
+            cls: 'x-list-header'
+        };
+
+        this.productList = new Ext.List({
+            itemTpl: new Ext.XTemplate(
+            '&lt;div class=&quot;icon&quot; style=&quot;background-image: url(images/product.png)&quot;&gt;&lt;/div&gt;',
+            '&lt;h3&gt;{[values.product.get(&quot;name&quot;)]}&lt;/h3&gt;'),
+            store: this.record.products(),
+            scroll: false,
+            autoHeight: true,
+            style: 'width: 100%;',
+            disableSelection: true
+        });
+
+        this.customersHeader = {
+            xtype: 'toolbar',
+            title: 'Customers',
+            cls: 'x-list-header'
+        };
+
+        this.commentList = new Ext.List({
+            itemTpl: new Ext.XTemplate(
+            '&lt;div class=&quot;icon&quot; style=&quot;background-image: url(images/comment.png)&quot;&gt;&lt;/div&gt;',
+            '&lt;span class=&quot;comment&quot;&gt;&lt;strong&gt;{[app.utils.dateTimeFormat(values.date)]}&lt;/strong&gt;&lt;br/&gt;',
+            '&lt;span&gt;{text}&lt;/span&gt;&lt;/span&gt;'),
+            store: this.record.comments(),
+            scroll: false,
+            autoHeight: true,
+            style: 'width: 100%;',
+            disableSelection: true
+        });
+
+        this.commentsHeader = {
+            xtype: 'toolbar',
+            title: 'Comments',
+            cls: 'x-list-header'
+        };
+
+        this.customerList = new Ext.List({
+            itemTpl: new Ext.XTemplate(
+            '&lt;div class=&quot;icon&quot; style=&quot;background-image: url(images/customer.png)&quot;&gt;&lt;/div&gt;',
+            '&lt;span&gt;{[values.customer.get(&quot;firstName&quot;)]} {[values.customer.get(&quot;lastName&quot;)]}&lt;br/&gt;',
+            '&lt;small style=&quot;color: #D40E3F &quot;&gt;{[values.customer.get(&quot;importance&quot;)]}&lt;/small&gt;&lt;/span&gt;',
+            '&lt;img style=&quot;margin-bottom: -3px;margin-left:10px&quot; src=&quot;images/{[app.utils.getCustomerImportanceCode(values.customer.get(&quot;importance&quot;))]}.gif &quot;/&gt;'),
+            store: this.record.customers(),
+            disableSelection: true,
+            scroll: false,
+            autoHeight: true,
+            style: 'width: 100%;',
+            onItemDisclosure: function(record, btn, index) {
+                if (record !== undefined) {
+                    Ext.dispatch({
+                        controller: app.currentTab.controller,
+                        record: record,
+                        action: 'showCustomer'
+                    });
+                }
+            }
+        });
+
+        this.items = [this.activityInfo, this.companyHeader, this.companyInfo,
+        this.customersHeader, this.customerList, this.productsHeader,
+        this.productList, this.commentsHeader, this.commentList];
+
+        app.views.ActivityInfo.superclass.initComponent.call(this);
+    },
+
+    updateWithRecord: function(record) {
+		app.log('ActivityInfo update with record : ' + record);
+
+        if (record) {
+
+            this.activityInfo.update(record.data);
+            this.companyInfo.update(record.data);
+            this.customerList.bindStore(record.customers());
+            this.productList.bindStore(record.products());
+            this.commentList.bindStore(record.comments());
+
+            this.record = record;
+        }
+    }
+});
+
+Ext.reg('ActivityInfo', app.views.ActivityInfo);
+</pre>
+</body>
+</html>

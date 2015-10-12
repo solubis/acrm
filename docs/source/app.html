@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-regApplication'>/**
+</span> *    app.js	
+ *    
+ *    Created by Jerzy Błaszczyk on 2011-09-13.
+ *    Copyright 2011 Client and Friends. All rights reserved.
+ **/
+
+Ext.regApplication({
+	name: 'app',
+	tabletStartupScreen: 'images/tablet_startup.png',
+	phoneStartupScreen: 'images/phone_startup.png',
+	icon: 'images/icon.png',
+	glossOnIcon: true,
+	defaultUrl: 'Organizations/start',
+
+	launch: function() {
+		var me = this;
+
+		Ext.util.Format.defaultDateFormat = &quot;F d, Y, h:i a&quot;;
+
+		Ext.Router.draw(function(map) {
+			map.connect(':controller/:action');
+		});
+
+		me.viewport = new app.views.Main();
+
+		me.viewport.setLoading(true);
+		
+		acrm.data.Database.initDatabase(false, function() {
+			console.log('Database Initialized');
+			acrm.data.useFiles = true;
+			acrm.data.serverURL = 'http://192.168.1.2/acrm/db';
+			acrm.data.Database.setUser('Jenna Jameson');
+			acrm.data.Synchronizer.download(function() {
+				console.log('Data loaded');
+				me.viewport.setLoading(false);
+			});
+		});
+
+	}
+});
+</pre>
+</body>
+</html>

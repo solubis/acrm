@@ -1,0 +1,7 @@
+*.class
+*.pyc
+*.pyo
+
+Icon
+.DS_Store
+.localized

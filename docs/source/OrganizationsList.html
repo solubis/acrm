@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='app-views-OrganizationsList'>/**
+</span> *    OrganizationsList.js	
+ *    
+ *    Created by Jerzy Błaszczyk on 2011-09-11.
+ *    Copyright 2011 Client and Friends. All rights reserved.
+ **/
+
+app.views.OrganizationsList = Ext.extend(Ext.Panel, {
+	layout: 'fit',
+	cls: 'list-panel',
+
+	initComponent: function() {
+		this.dockedItems = [{
+			dock: 'top',
+			xtype: 'toolbar',
+			title: 'Organizations',
+			ui: 'dark'
+		}];
+
+		this.store = acrm.data.Database.getStore({
+			autoLoad: true,
+			model: 'ORGANIZATION',
+			sql: 'SELECT ' +
+					'ORGANIZATION.INTERNAL_NAME, ' +
+					'ORGANIZATION.OBJECT_ID, ' +
+					'ORGANIZATION_TYPE.NAME AS TYPE_NAME, ' + 
+					'ORGANIZATION_TYPE_GROUP.NAME AS TYPE_GROUP_NAME '+
+					'FROM ORGANIZATION INNER JOIN ORGANIZATION_TYPE ON ORGANIZATION.ORGANIZATION_TYPE_ID = ORGANIZATION_TYPE.OBJECT_ID '+
+				 	'INNER JOIN ORGANIZATION_TYPE_GROUP ON ORGANIZATION_TYPE.ORGANIZATION_TYPE_GROUP_ID = ORGANIZATION_TYPE_GROUP.OBJECT_ID',
+			pageSize: 20,
+			getGroupString: function(record) {
+				return record.get('INTERNAL_NAME')[0];
+			},
+			sorters: [{
+				property: 'INTERNAL_NAME',
+				direction: 'ASC'
+			}]
+		});
+
+		this.items = [{
+			xtype: 'list',
+			store: this.store,
+			itemTpl: new Ext.XTemplate('&lt;div class=&quot;icon&quot; style=&quot;background-image: url(images/{TYPE_GROUP_NAME}.png)&quot;&gt;&lt;/div&gt;', '&lt;span class=&quot;name&quot;&gt;{INTERNAL_NAME}&lt;br/&gt;', '&lt;h4&gt;{TYPE_NAME}{[this.getPhonesString(values)]}&lt;/h4&gt; ', '&lt;h4&gt;{[this.getEmailString(values)]}&lt;/h4&gt;&lt;/span&gt;', {
+				compiled: true,
+
+				getAddressString: function(values) {
+
+					var a = values.address,
+						b = values.city,
+						c = values.postalCode;
+
+					return app.utils.getCSV(a, b, c);
+				},
+
+				getPhonesString: function(values) {
+
+					if (!values.phone &amp;&amp; !values.mobile) return '';
+
+					var a, b;
+					if (Ext.is.Phone) {
+						a = '&lt;a href=&quot;tel:' + values.phone + '&quot;&gt;' + values.phone + &quot;&lt;/a&gt;&quot;;
+						b = '&lt;a href=&quot;tel:' + values.mobile + '&quot;&gt;' + values.mobile + &quot;&lt;/a&gt;&quot;;
+					} else {
+						a = values.phone;
+						b = values.mobile;
+					}
+
+					return 'Phones: ' + a + (values.mobile ? ', ' + b : '');
+				},
+
+				getEmailString: function(values) {
+					if (!values.email) return '';
+
+					var result = 'Email: &lt;a href=&quot;mailto:' + values.email + '&quot;&gt;' + values.email + '&lt;/a&gt;';
+
+					return result;
+				}
+
+			}),
+			grouped: true,
+			indexBar: false,
+			disableSelection: true,
+			onItemDisclosureOLD: function(record, btn, index) {
+				if (record !== undefined) {
+					Ext.dispatch({
+						controller: app.currentTab.controller,
+						record: record,
+						action: 'showOrganization'
+					});
+				}
+			},
+
+			listeners: {
+				selectionchange: function(sel, records) {
+
+					if (records[0] !== undefined) {
+						Ext.dispatch({
+							controller: app.currentTab.controller,
+							action: 'showActivityInfo',
+							record: records[0]
+						});
+					}
+				}
+			},
+
+			plugins: [{
+				ptype: 'listpaging',
+				autoPaging: false
+			}]
+		}];
+
+		app.views.OrganizationsList.superclass.initComponent.apply(this, arguments);
+	},
+
+	updateData: function() {
+		this.down('.list').bindStore(app.stores.Organization);
+		this.down('.list').store.clearFilter();
+	}
+});
+
+Ext.reg('OrganizationsList', app.views.OrganizationsList);
+</pre>
+</body>
+</html>

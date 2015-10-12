@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>The source code</title>
+  <link href="../resources/prettify/prettify.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="../resources/prettify/prettify.js"></script>
+  <style type="text/css">
+    .highlight { display: block; background-color: #ddd; }
+  </style>
+  <script type="text/javascript">
+    function highlight() {
+      document.getElementById(location.hash.replace(/#/, "")).className = "highlight";
+    }
+  </script>
+</head>
+<body onload="prettyPrint(); highlight();">
+  <pre class="prettyprint lang-js"><span id='global-property-ns'>/**
+</span> *  ddl.js
+ *  
+ *  FILE GENERATED - DO NOT MODIFY!!!
+ *  
+ *  Copyright 2011 Client and Friends. All rights reserved.
+ */
+
+
+Ext.ns('acrm.data');
+
+<span id='acrm-data-DDL'>/**
+</span> *	Structure holding all DDL structure used to create database schema
+ */
+
+acrm.data.DDL =
+{
+    &quot;ddlObjects&quot; : [
+        {
+            &quot;create&quot; : &quot;CREATE TABLE CHANGE_TRACKING (OBJECT_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, RELATED_OBJECT_ID GUID NOT NULL, TABLE_NAME NVARCHAR( 50 ) NOT NULL COLLATE 'NOCASE', CHANGE_TYPE SMALLINT NOT NULL, DATE DATETIME NOT NULL DEFAULT ( CURRENT_TIMESTAMP ));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CONFIGURATION] (PARAMETER_NAME TEXT PRIMARY KEY NOT NULL, PARAMETER_VALUE TEXT NOT NULL);&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CONFIGURATION;&quot;,
+            &quot;name&quot; : &quot;CONFIGURATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_SALES_TEMP] (ORGANIZATION_ID GUID NOT NULL, PRODUCT_ID GUID NOT NULL, YEAR INT NOT NULL, MONTH INTEGER NOT NULL, QUANTITY INTEGER NOT NULL, VALUE NUMERIC NOT NULL);&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_SALES_TEMP;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_SALES_TEMP&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX IDX_ORGANIZATION_SALES_TEMP ON ORGANIZATION_SALES_TEMP (PRODUCT_ID, ORGANIZATION_ID );&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX IDX_ORGANIZATION_SALES_TEMP;&quot;,
+            &quot;name&quot; : &quot;IDX_ORGANIZATION_SALES_TEMP&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ADDRESS_ASSIGNATION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ADDRESS_ID\&quot;  guid NOT NULL, \&quot;RALETED_OBJECT_TYPE\&quot;  integer NOT NULL, \&quot;RELATED_OBJECT_ID\&quot;  guid NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ADDRESS_ID])        REFERENCES [ADDRESS]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ADDRESS_ASSIGNATION;&quot;,
+            &quot;name&quot; : &quot;ADDRESS_ASSIGNATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_ADDRESS_ID]ON [ADDRESS_ASSIGNATION]([ADDRESS_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_ADDRESS_ID;&quot;,
+            &quot;name&quot; : &quot;ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_ADDRESS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_RALETED_OBJECT_TYPE]ON [ADDRESS_ASSIGNATION]([RALETED_OBJECT_TYPE]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_RALETED_OBJECT_TYPE;&quot;,
+            &quot;name&quot; : &quot;ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_RALETED_OBJECT_TYPE&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_RELATED_OBJECT_ID]ON [ADDRESS_ASSIGNATION]([RELATED_OBJECT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_RELATED_OBJECT_ID;&quot;,
+            &quot;name&quot; : &quot;ADDRESS_ASSIGNATION_IDX_ADDRESS_ASSIGNATION_RELATED_OBJECT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ADDRESS_ASSIGNATION_CHANGE_TRACKING] AFTER INSERT ON ADDRESS_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ADDRESS_ASSIGNATION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ADDRESS_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ADDRESS_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ADDRESS_ASSIGNATION_CHANGE_TRACKING] AFTER UPDATE ON ADDRESS_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ADDRESS_ASSIGNATION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ADDRESS_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ADDRESS_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ADDRESS_ASSIGNATION_CHANGE_TRACKING] AFTER DELETE ON ADDRESS_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ADDRESS_ASSIGNATION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ADDRESS_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ADDRESS_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [COMMENT_TYPE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE COMMENT_TYPE;&quot;,
+            &quot;name&quot; : &quot;COMMENT_TYPE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_COMMENT_TYPE_CHANGE_TRACKING] AFTER INSERT ON COMMENT_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'COMMENT_TYPE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_COMMENT_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_COMMENT_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_COMMENT_TYPE_CHANGE_TRACKING] AFTER UPDATE ON COMMENT_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'COMMENT_TYPE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_COMMENT_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_COMMENT_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_COMMENT_TYPE_CHANGE_TRACKING] AFTER DELETE ON COMMENT_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'COMMENT_TYPE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_COMMENT_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_COMMENT_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [COMMENT_ASSIGNATION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;COMMENT_ID\&quot;  guid NOT NULL, \&quot;RELATED_OBJECT_ID\&quot;  guid NOT NULL, \&quot;RALETED_OBJECT_TYPE\&quot;  integer NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([COMMENT_ID])        REFERENCES [COMMENT]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE COMMENT_ASSIGNATION;&quot;,
+            &quot;name&quot; : &quot;COMMENT_ASSIGNATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_ADDRESS_ID]ON [COMMENT_ASSIGNATION]([COMMENT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_ADDRESS_ID;&quot;,
+            &quot;name&quot; : &quot;COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_ADDRESS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RALETED_OBJECT_TYPE]ON [COMMENT_ASSIGNATION]([RALETED_OBJECT_TYPE]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RALETED_OBJECT_TYPE;&quot;,
+            &quot;name&quot; : &quot;COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RALETED_OBJECT_TYPE&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RELATED_OBJECT_ID]ON [COMMENT_ASSIGNATION]([RELATED_OBJECT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RELATED_OBJECT_ID;&quot;,
+            &quot;name&quot; : &quot;COMMENT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RELATED_OBJECT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_COMMENT_ASSIGNATION_CHANGE_TRACKING] AFTER INSERT ON COMMENT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'COMMENT_ASSIGNATION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_COMMENT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_COMMENT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_COMMENT_ASSIGNATION_CHANGE_TRACKING] AFTER UPDATE ON COMMENT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'COMMENT_ASSIGNATION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_COMMENT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_COMMENT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_COMMENT_ASSIGNATION_CHANGE_TRACKING] AFTER DELETE ON COMMENT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'COMMENT_ASSIGNATION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_COMMENT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_COMMENT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [LOCATION_MOBILE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;EMPLOYEE_ID\&quot;  guid NOT NULL, \&quot;ID\&quot;  integer PRIMARY KEY AUTOINCREMENT NOT NULL, \&quot;USER_NAME\&quot;  nvarchar(100) NOT NULL COLLATE NOCASE, \&quot;HOST_NAME\&quot;  nvarchar(100) NOT NULL COLLATE NOCASE,    FOREIGN KEY ([EMPLOYEE_ID])        REFERENCES [EMPLOYEE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE LOCATION_MOBILE;&quot;,
+            &quot;name&quot; : &quot;LOCATION_MOBILE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE UNIQUE INDEX [LOCATION_MOBILE_AK_LOCATION_MOBILE_EMPLOYEE_OBJECT_ID]ON [LOCATION_MOBILE]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX LOCATION_MOBILE_AK_LOCATION_MOBILE_EMPLOYEE_OBJECT_ID;&quot;,
+            &quot;name&quot; : &quot;LOCATION_MOBILE_AK_LOCATION_MOBILE_EMPLOYEE_OBJECT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_LOCATION_MOBILE_CHANGE_TRACKING] AFTER INSERT ON LOCATION_MOBILE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'LOCATION_MOBILE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_LOCATION_MOBILE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_LOCATION_MOBILE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_LOCATION_MOBILE_CHANGE_TRACKING] AFTER UPDATE ON LOCATION_MOBILE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'LOCATION_MOBILE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_LOCATION_MOBILE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_LOCATION_MOBILE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_LOCATION_MOBILE_CHANGE_TRACKING] AFTER DELETE ON LOCATION_MOBILE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'LOCATION_MOBILE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_LOCATION_MOBILE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_LOCATION_MOBILE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [DOCUMENT_ASSIGNATION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;DOCUMENT_ID\&quot;  guid NOT NULL, \&quot;RELATED_OBJECT_ID\&quot;  guid NOT NULL, \&quot;RALETED_OBJECT_TYPE\&quot;  integer NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([DOCUMENT_ID])        REFERENCES [DOCUMENT]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE DOCUMENT_ASSIGNATION;&quot;,
+            &quot;name&quot; : &quot;DOCUMENT_ASSIGNATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_ADDRESS_ID]ON [DOCUMENT_ASSIGNATION]([DOCUMENT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_ADDRESS_ID;&quot;,
+            &quot;name&quot; : &quot;DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_ADDRESS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_RALETED_OBJECT_TYPE]ON [DOCUMENT_ASSIGNATION]([RALETED_OBJECT_TYPE]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_RALETED_OBJECT_TYPE;&quot;,
+            &quot;name&quot; : &quot;DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_RALETED_OBJECT_TYPE&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_RELATED_OBJECT_ID]ON [DOCUMENT_ASSIGNATION]([RELATED_OBJECT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_RELATED_OBJECT_ID;&quot;,
+            &quot;name&quot; : &quot;DOCUMENT_ASSIGNATION_IDX_DOCUMENT_ASSIGNATION_RELATED_OBJECT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_DOCUMENT_ASSIGNATION_CHANGE_TRACKING] AFTER INSERT ON DOCUMENT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'DOCUMENT_ASSIGNATION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_DOCUMENT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_DOCUMENT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_DOCUMENT_ASSIGNATION_CHANGE_TRACKING] AFTER UPDATE ON DOCUMENT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'DOCUMENT_ASSIGNATION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_DOCUMENT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_DOCUMENT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_DOCUMENT_ASSIGNATION_CHANGE_TRACKING] AFTER DELETE ON DOCUMENT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'DOCUMENT_ASSIGNATION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_DOCUMENT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_DOCUMENT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [PRODUCT_GROUP] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;PRODUCT_GROUP_DIVISION_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([PRODUCT_GROUP_DIVISION_ID])        REFERENCES [PRODUCT_GROUP_DIVISION]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE PRODUCT_GROUP;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_GROUP&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [PRODUCT_GROUP_IDX_PRODUCT_GROUP_PRODUCT_GROUP_DIVISION_ID]ON [PRODUCT_GROUP]([PRODUCT_GROUP_DIVISION_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX PRODUCT_GROUP_IDX_PRODUCT_GROUP_PRODUCT_GROUP_DIVISION_ID;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_GROUP_IDX_PRODUCT_GROUP_PRODUCT_GROUP_DIVISION_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_PRODUCT_GROUP_CHANGE_TRACKING] AFTER INSERT ON PRODUCT_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'PRODUCT_GROUP' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_PRODUCT_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_PRODUCT_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_PRODUCT_GROUP_CHANGE_TRACKING] AFTER UPDATE ON PRODUCT_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT_GROUP' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_PRODUCT_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_PRODUCT_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_PRODUCT_GROUP_CHANGE_TRACKING] AFTER DELETE ON PRODUCT_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT_GROUP' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_PRODUCT_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_PRODUCT_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [LOCATION_MOBILE_DATA_RANGE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;LOCATION_MOBILE_ID\&quot;  guid NOT NULL, \&quot;EMPLOYEE_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_DATE\&quot;  datetime NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([EMPLOYEE_ID])        REFERENCES [EMPLOYEE]([OBJECT_ID]),    FOREIGN KEY ([LOCATION_MOBILE_ID])        REFERENCES [LOCATION_MOBILE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE LOCATION_MOBILE_DATA_RANGE;&quot;,
+            &quot;name&quot; : &quot;LOCATION_MOBILE_DATA_RANGE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE UNIQUE INDEX [LOCATION_MOBILE_DATA_RANGE_AK_LOCATION_MOBILE_DATA_RANGE_EMPLOYEE_ID]ON [LOCATION_MOBILE_DATA_RANGE]([LOCATION_MOBILE_ID], [EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX LOCATION_MOBILE_DATA_RANGE_AK_LOCATION_MOBILE_DATA_RANGE_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;LOCATION_MOBILE_DATA_RANGE_AK_LOCATION_MOBILE_DATA_RANGE_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING] AFTER INSERT ON LOCATION_MOBILE_DATA_RANGE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'LOCATION_MOBILE_DATA_RANGE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING] AFTER UPDATE ON LOCATION_MOBILE_DATA_RANGE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'LOCATION_MOBILE_DATA_RANGE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING] AFTER DELETE ON LOCATION_MOBILE_DATA_RANGE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'LOCATION_MOBILE_DATA_RANGE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_LOCATION_MOBILE_DATA_RANGE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CONTACT] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;VALUE\&quot;  nvarchar(510) COLLATE NOCASE, \&quot;COMMENT\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;CONTACT_TYPE_ID\&quot;  guid NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime, \&quot;IS_REMINDER_CONTACT\&quot;  smallint NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([CONTACT_TYPE_ID])        REFERENCES [CONTACT_TYPE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CONTACT;&quot;,
+            &quot;name&quot; : &quot;CONTACT&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [CONTACT_IDX_CONTACT_CONTACT_TYPE_ID]ON [CONTACT]([CONTACT_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX CONTACT_IDX_CONTACT_CONTACT_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;CONTACT_IDX_CONTACT_CONTACT_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CONTACT_CHANGE_TRACKING] AFTER INSERT ON CONTACT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CONTACT' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CONTACT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CONTACT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CONTACT_CHANGE_TRACKING] AFTER UPDATE ON CONTACT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CONTACT' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CONTACT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CONTACT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CONTACT_CHANGE_TRACKING] AFTER DELETE ON CONTACT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CONTACT' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CONTACT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CONTACT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_EMPLOYEE_FILTER] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ORGANIZATION_EMPLOYEE_ID\&quot;  guid NOT NULL, \&quot;ORGANIZATION_ID\&quot;  guid NOT NULL, \&quot;EMPLOYEE_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_EMPLOYEE_ID])        REFERENCES [ORGANIZATION_EMPLOYEE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_EMPLOYEE_FILTER;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_FILTER&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_EMPLOYEE_ID]ON [ORGANIZATION_EMPLOYEE_FILTER]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_ORGANIZATION_EMPLOYEE_ID]ON [ORGANIZATION_EMPLOYEE_FILTER]([ORGANIZATION_EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_ORGANIZATION_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_ORGANIZATION_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_ORGANIZATION_ID]ON [ORGANIZATION_EMPLOYEE_FILTER]([ORGANIZATION_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_ORGANIZATION_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_FILTER_IDX_ORGANIZATION_EMPLOYEE_FILTER_ORGANIZATION_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION_EMPLOYEE_FILTER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION_EMPLOYEE_FILTER' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION_EMPLOYEE_FILTER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_EMPLOYEE_FILTER' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION_EMPLOYEE_FILTER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_EMPLOYEE_FILTER' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_EMPLOYEE_FILTER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ADDRESS] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;CITY\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;POSTAL_CODE\&quot;  nvarchar(40) COLLATE NOCASE, \&quot;ADDRESS_LINE\&quot;  nvarchar(510) COLLATE NOCASE, \&quot;ADDRESS_TYPE_ID\&quot;  guid NOT NULL, \&quot;IS_MARKETING_ADDRESS\&quot;  smallint NOT NULL, \&quot;LATITUDE\&quot;  numeric, \&quot;LONGITUDE\&quot;  numeric, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ADDRESS_TYPE_ID])        REFERENCES [ADDRESS_TYPE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ADDRESS;&quot;,
+            &quot;name&quot; : &quot;ADDRESS&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ADDRESS_IDX_ADDRESS_ADDRESS_TYPE_ID]ON [ADDRESS]([ADDRESS_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ADDRESS_IDX_ADDRESS_ADDRESS_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;ADDRESS_IDX_ADDRESS_ADDRESS_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ADDRESS_CHANGE_TRACKING] AFTER INSERT ON ADDRESS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ADDRESS' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ADDRESS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ADDRESS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ADDRESS_CHANGE_TRACKING] AFTER UPDATE ON ADDRESS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ADDRESS' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ADDRESS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ADDRESS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ADDRESS_CHANGE_TRACKING] AFTER DELETE ON ADDRESS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ADDRESS' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ADDRESS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ADDRESS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [COMMENT] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;PRIORITY\&quot;  smallint NOT NULL, \&quot;TEXT\&quot;  nvarchar(4000) COLLATE NOCASE, \&quot;EMPLOYEE_ID\&quot;  guid, \&quot;COMMENT_TYPE_ID\&quot;  guid NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime, \&quot;DATE\&quot;  datetime NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([COMMENT_TYPE_ID])        REFERENCES [COMMENT_TYPE]([OBJECT_ID]),    FOREIGN KEY ([EMPLOYEE_ID])        REFERENCES [EMPLOYEE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE COMMENT;&quot;,
+            &quot;name&quot; : &quot;COMMENT&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [COMMENT_IDX_COMMENT_COMMENT_TYPE_ID]ON [COMMENT]([COMMENT_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX COMMENT_IDX_COMMENT_COMMENT_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;COMMENT_IDX_COMMENT_COMMENT_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [COMMENT_IDX_COMMENT_EMPLOYEE_ID]ON [COMMENT]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX COMMENT_IDX_COMMENT_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;COMMENT_IDX_COMMENT_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_COMMENT_CHANGE_TRACKING] AFTER INSERT ON COMMENT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'COMMENT' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_COMMENT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_COMMENT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_COMMENT_CHANGE_TRACKING] AFTER UPDATE ON COMMENT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'COMMENT' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_COMMENT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_COMMENT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_COMMENT_CHANGE_TRACKING] AFTER DELETE ON COMMENT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'COMMENT' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_COMMENT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_COMMENT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_EMPLOYEE_FILTER] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_EMPLOYEE_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_DATE\&quot;  datetime NOT NULL, \&quot;EMPLOYEE_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_EMPLOYEE_ID])        REFERENCES [ACTIVITY_EMPLOYEE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_EMPLOYEE_FILTER;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_FILTER&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_DATE]ON [ACTIVITY_EMPLOYEE_FILTER]([ACTIVITY_DATE]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_DATE;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_DATE&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_EMPLOYEE_ID]ON [ACTIVITY_EMPLOYEE_FILTER]([ACTIVITY_EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_ID]ON [ACTIVITY_EMPLOYEE_FILTER]([ACTIVITY_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_ACTIVITY_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_EMPLOYEE_ID]ON [ACTIVITY_EMPLOYEE_FILTER]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_FILTER_IDX_ACTIVITY_EMPLOYEE_FILTER_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_EMPLOYEE_FILTER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_EMPLOYEE_FILTER' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_EMPLOYEE_FILTER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_EMPLOYEE_FILTER' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_EMPLOYEE_FILTER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_EMPLOYEE_FILTER' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_EMPLOYEE_FILTER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [DOCUMENT] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;FILENAME\&quot;  nvarchar(256) NOT NULL COLLATE NOCASE, \&quot;FILE_SIZE\&quot;  integer NOT NULL, \&quot;DESCRIPTION\&quot;  nvarchar(2048) COLLATE NOCASE, \&quot;EXTERNAL_URL\&quot;  nvarchar(300) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE DOCUMENT;&quot;,
+            &quot;name&quot; : &quot;DOCUMENT&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_DOCUMENT_CHANGE_TRACKING] AFTER INSERT ON DOCUMENT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'DOCUMENT' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_DOCUMENT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_DOCUMENT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_DOCUMENT_CHANGE_TRACKING] AFTER UPDATE ON DOCUMENT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'DOCUMENT' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_DOCUMENT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_DOCUMENT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_DOCUMENT_CHANGE_TRACKING] AFTER DELETE ON DOCUMENT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'DOCUMENT' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_DOCUMENT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_DOCUMENT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;OFFICIAL_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;INTERNAL_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;ADDITIONAL_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;CODE\&quot;  nvarchar(40) COLLATE NOCASE, \&quot;RATING\&quot;  nvarchar(20) COLLATE NOCASE, \&quot;IMPORTANCE\&quot;  nvarchar(20) COLLATE NOCASE, \&quot;PENETRATION\&quot;  nvarchar(20) COLLATE NOCASE, \&quot;ORGANIZATION_TYPE_ID\&quot;  guid NOT NULL, \&quot;ORGANIZATION_STATUS_ID\&quot;  guid NOT NULL, \&quot;EMPLOYEE_COUNT\&quot;  integer, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_STATUS_ID])        REFERENCES [ORGANIZATION_STATUS]([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_TYPE_ID])        REFERENCES [ORGANIZATION_TYPE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_IDX_ORGANIZATION_ORGANIZATION_STATUS_ID]ON [ORGANIZATION]([ORGANIZATION_STATUS_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_IDX_ORGANIZATION_ORGANIZATION_STATUS_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_IDX_ORGANIZATION_ORGANIZATION_STATUS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_IDX_ORGANIZATION_ORGANIZATION_TYPE_ID]ON [ORGANIZATION]([ORGANIZATION_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_IDX_ORGANIZATION_ORGANIZATION_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_IDX_ORGANIZATION_ORGANIZATION_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CUSTOMER] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;FIRST_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;LAST_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;CODE\&quot;  nvarchar(40) COLLATE NOCASE, \&quot;GENDER\&quot;  nvarchar(20) COLLATE NOCASE, \&quot;MARITAL_STATUS\&quot;  smallint, \&quot;BIRTH_DATE\&quot;  datetime, \&quot;SPOUSE_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;CHILDREN_AMOUNT\&quot;  smallint, \&quot;CHILDREN_NAMES\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;IS_ACTIVE\&quot;  smallint NOT NULL, \&quot;IS_KOL\&quot;  smallint, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CUSTOMER;&quot;,
+            &quot;name&quot; : &quot;CUSTOMER&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CUSTOMER_CHANGE_TRACKING] AFTER INSERT ON CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CUSTOMER' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CUSTOMER_CHANGE_TRACKING] AFTER UPDATE ON CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CUSTOMER_CHANGE_TRACKING] AFTER DELETE ON CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;SUBJECT\&quot;  nvarchar(510) COLLATE NOCASE, \&quot;VENUE\&quot;  nvarchar(510) COLLATE NOCASE, \&quot;START_DATE\&quot;  datetime NOT NULL DEFAULT (CURRENT_TIMESTAMP), \&quot;END_DATE\&quot;  datetime NOT NULL DEFAULT (CURRENT_TIMESTAMP), \&quot;ACTIVITY_TYPE_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_STATUS_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_PURPOSE_ID\&quot;  guid, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_PURPOSE_ID])        REFERENCES [ACTIVITY_PURPOSE]([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_STATUS_ID])        REFERENCES [ACTIVITY_STATUS]([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_TYPE_ID])        REFERENCES [ACTIVITY_TYPE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_IDX_ACTIVITY_ACTIVITY_PURPOSE_ID]ON [ACTIVITY]([ACTIVITY_PURPOSE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_IDX_ACTIVITY_ACTIVITY_PURPOSE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_IDX_ACTIVITY_ACTIVITY_PURPOSE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_IDX_ACTIVITY_ACTIVITY_STATUS_ID]ON [ACTIVITY]([ACTIVITY_STATUS_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_IDX_ACTIVITY_ACTIVITY_STATUS_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_IDX_ACTIVITY_ACTIVITY_STATUS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_IDX_ACTIVITY_ACTIVITY_TYPE_ID]ON [ACTIVITY]([ACTIVITY_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_IDX_ACTIVITY_ACTIVITY_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_IDX_ACTIVITY_ACTIVITY_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_IDX_ACTIVITY_START_DATE_END_DATE]ON [ACTIVITY]([START_DATE], [END_DATE]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_IDX_ACTIVITY_START_DATE_END_DATE;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_IDX_ACTIVITY_START_DATE_END_DATE&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [PRODUCT] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;PICTURE\&quot;  blob, \&quot;IS_ACTIVE\&quot;  smallint NOT NULL, \&quot;IS_KEY_PRODUCT\&quot;  smallint NOT NULL, \&quot;POSITIONING\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;REASON_FOR_USE\&quot;  nvarchar(1000) COLLATE NOCASE, \&quot;EMPLOYEE_ID\&quot;  guid, \&quot;ADVANTAGES\&quot;  nvarchar(1000) COLLATE NOCASE, \&quot;DISADVANTAGES\&quot;  nvarchar(1000) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([EMPLOYEE_ID])        REFERENCES [EMPLOYEE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE PRODUCT;&quot;,
+            &quot;name&quot; : &quot;PRODUCT&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [PRODUCT_IDX_PRODUCT_EMPLOYEE_ID]ON [PRODUCT]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX PRODUCT_IDX_PRODUCT_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_IDX_PRODUCT_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_PRODUCT_CHANGE_TRACKING] AFTER INSERT ON PRODUCT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'PRODUCT' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_PRODUCT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_PRODUCT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_PRODUCT_CHANGE_TRACKING] AFTER UPDATE ON PRODUCT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_PRODUCT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_PRODUCT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_PRODUCT_CHANGE_TRACKING] AFTER DELETE ON PRODUCT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_PRODUCT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_PRODUCT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_EMPLOYEE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ORGANIZATION_ID\&quot;  guid NOT NULL, \&quot;EMPLOYEE_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([EMPLOYEE_ID])        REFERENCES [EMPLOYEE]([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_ID])        REFERENCES [ORGANIZATION]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_EMPLOYEE;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE UNIQUE INDEX [ORGANIZATION_EMPLOYEE_AK_ORGANIZATION_EMPLOYEE_ORGANIZATION_ID_EMPLOYEE_ID]ON [ORGANIZATION_EMPLOYEE]([ORGANIZATION_ID], [EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_EMPLOYEE_AK_ORGANIZATION_EMPLOYEE_ORGANIZATION_ID_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_AK_ORGANIZATION_EMPLOYEE_ORGANIZATION_ID_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_EMPLOYEE_IDX_ORGANIZATION_EMPLOYEE_EMPLOYEE_ID]ON [ORGANIZATION_EMPLOYEE]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_EMPLOYEE_IDX_ORGANIZATION_EMPLOYEE_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_IDX_ORGANIZATION_EMPLOYEE_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_EMPLOYEE_IDX_ORGANIZATION_EMPLOYEE_ORGANIZATION_ID]ON [ORGANIZATION_EMPLOYEE]([ORGANIZATION_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_EMPLOYEE_IDX_ORGANIZATION_EMPLOYEE_ORGANIZATION_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_EMPLOYEE_IDX_ORGANIZATION_EMPLOYEE_ORGANIZATION_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION_EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION_EMPLOYEE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION_EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_EMPLOYEE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION_EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_EMPLOYEE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_CUSTOMER] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;IS_MAIN_ORGANIZATION\&quot;  smallint NOT NULL, \&quot;CUSTOMER_ID\&quot;  guid NOT NULL, \&quot;CUSTOMER_IMPORTANCE_ID\&quot;  guid NOT NULL, \&quot;CUSTOMER_TYPE_ID\&quot;  guid, \&quot;CUSTOMER_POSITION_ID\&quot;  guid, \&quot;ORGANIZATION_ID\&quot;  guid NOT NULL, \&quot;CUSTOMER_STATUS_ID\&quot;  guid, \&quot;FULL_PART_TIME\&quot;  integer, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([CUSTOMER_ID])        REFERENCES [CUSTOMER]([OBJECT_ID]),    FOREIGN KEY ([CUSTOMER_IMPORTANCE_ID])        REFERENCES [CUSTOMER_IMPORTANCE]([OBJECT_ID]),    FOREIGN KEY ([CUSTOMER_POSITION_ID])        REFERENCES [CUSTOMER_POSITION]([OBJECT_ID]),    FOREIGN KEY ([CUSTOMER_STATUS_ID])        REFERENCES [CUSTOMER_STATUS]([OBJECT_ID]),    FOREIGN KEY ([CUSTOMER_TYPE_ID])        REFERENCES [CUSTOMER_TYPE]([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_ID])        REFERENCES [ORGANIZATION]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_CUSTOMER;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_ID]ON [ORGANIZATION_CUSTOMER]([CUSTOMER_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_IMPORTANCE_ID]ON [ORGANIZATION_CUSTOMER]([CUSTOMER_IMPORTANCE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_IMPORTANCE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_IMPORTANCE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_POSITION_ID]ON [ORGANIZATION_CUSTOMER]([CUSTOMER_POSITION_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_POSITION_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_POSITION_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_STATUS_ID]ON [ORGANIZATION_CUSTOMER]([CUSTOMER_STATUS_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_STATUS_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_STATUS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_TYPE_ID]ON [ORGANIZATION_CUSTOMER]([CUSTOMER_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_CUSTOMER_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_ORGANIZATION_ID]ON [ORGANIZATION_CUSTOMER]([ORGANIZATION_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_ORGANIZATION_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_CUSTOMER_IDX_ORGANIZATION_CUSTOMER_ORGANIZATION_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_CUSTOMER_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION_CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION_CUSTOMER' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_CUSTOMER_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION_CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_CUSTOMER' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_CUSTOMER_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION_CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_CUSTOMER' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_CUSTOMER] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ID\&quot;  guid NOT NULL, \&quot;CUSTOMER_ID\&quot;  guid NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_ID])        REFERENCES [ACTIVITY]([OBJECT_ID]),    FOREIGN KEY ([CUSTOMER_ID])        REFERENCES [CUSTOMER]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_CUSTOMER;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_CUSTOMER&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_CUSTOMER_IDX_ACTIVITY_CUSTOMER_ACTIVITY_ID]ON [ACTIVITY_CUSTOMER]([ACTIVITY_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_CUSTOMER_IDX_ACTIVITY_CUSTOMER_ACTIVITY_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_CUSTOMER_IDX_ACTIVITY_CUSTOMER_ACTIVITY_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_CUSTOMER_IDX_ACTIVITY_CUSTOMER_CUSTOMER_ID]ON [ACTIVITY_CUSTOMER]([CUSTOMER_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_CUSTOMER_IDX_ACTIVITY_CUSTOMER_CUSTOMER_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_CUSTOMER_IDX_ACTIVITY_CUSTOMER_CUSTOMER_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_CUSTOMER_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_CUSTOMER' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_CUSTOMER_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_CUSTOMER' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_CUSTOMER_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_CUSTOMER WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_CUSTOMER' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_CUSTOMER_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_CUSTOMER_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_PRODUCT] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ID\&quot;  guid NOT NULL, \&quot;PRODUCT_ID\&quot;  guid NOT NULL, \&quot;SEQUENCE\&quot;  integer, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_ID])        REFERENCES [ACTIVITY]([OBJECT_ID]),    FOREIGN KEY ([PRODUCT_ID])        REFERENCES [PRODUCT]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_PRODUCT;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_PRODUCT&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_PRODUCT_IDX_ACTIVITY_PRODUCT_ACTIVITY_ID]ON [ACTIVITY_PRODUCT]([ACTIVITY_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_PRODUCT_IDX_ACTIVITY_PRODUCT_ACTIVITY_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_PRODUCT_IDX_ACTIVITY_PRODUCT_ACTIVITY_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_PRODUCT_IDX_ACTIVITY_PRODUCT_PRODUCT_ID]ON [ACTIVITY_PRODUCT]([PRODUCT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_PRODUCT_IDX_ACTIVITY_PRODUCT_PRODUCT_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_PRODUCT_IDX_ACTIVITY_PRODUCT_PRODUCT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_PRODUCT_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_PRODUCT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_PRODUCT' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_PRODUCT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_PRODUCT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_PRODUCT_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_PRODUCT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_PRODUCT' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_PRODUCT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_PRODUCT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_PRODUCT_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_PRODUCT WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_PRODUCT' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_PRODUCT_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_PRODUCT_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_EMPLOYEE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ROLE_ID\&quot;  guid NOT NULL, \&quot;EMPLOYEE_ID\&quot;  guid NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_ID])        REFERENCES [ACTIVITY]([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_ROLE_ID])        REFERENCES [ACTIVITY_ROLE]([OBJECT_ID]),    FOREIGN KEY ([EMPLOYEE_ID])        REFERENCES [EMPLOYEE]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_EMPLOYEE;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_ACTIVITY_ID]ON [ACTIVITY_EMPLOYEE]([ACTIVITY_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_ACTIVITY_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_ACTIVITY_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_ACTIVITY_ROLE_ID]ON [ACTIVITY_EMPLOYEE]([ACTIVITY_ROLE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_ACTIVITY_ROLE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_ACTIVITY_ROLE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_EMPLOYEE_ID]ON [ACTIVITY_EMPLOYEE]([EMPLOYEE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_EMPLOYEE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_EMPLOYEE_IDX_ACTIVITY_EMPLOYEE_EMPLOYEE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_EMPLOYEE_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_EMPLOYEE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_EMPLOYEE_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_EMPLOYEE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_EMPLOYEE_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_EMPLOYEE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_ORGANIZATION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ID\&quot;  guid NOT NULL, \&quot;ORGANIZATION_ID\&quot;  guid NOT NULL, \&quot;ACTIVITY_ORGANIZATION_TYPE_ID\&quot;  guid, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_ID])        REFERENCES [ACTIVITY]([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_ID])        REFERENCES [ORGANIZATION]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_ORGANIZATION;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_ORGANIZATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ACTIVITY_ID]ON [ACTIVITY_ORGANIZATION]([ACTIVITY_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ACTIVITY_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ACTIVITY_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ACTIVITY_ORGANIZATION_TYPE_ID]ON [ACTIVITY_ORGANIZATION]([ACTIVITY_ORGANIZATION_TYPE_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ACTIVITY_ORGANIZATION_TYPE_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ACTIVITY_ORGANIZATION_TYPE_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ORGANIZATION_ID]ON [ACTIVITY_ORGANIZATION]([ORGANIZATION_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ORGANIZATION_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_ORGANIZATION_IDX_ACTIVITY_ORGANIZATION_ORGANIZATION_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_ORGANIZATION_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_ORGANIZATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_ORGANIZATION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_ORGANIZATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_ORGANIZATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_ORGANIZATION_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_ORGANIZATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_ORGANIZATION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_ORGANIZATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_ORGANIZATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_ORGANIZATION_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_ORGANIZATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_ORGANIZATION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_ORGANIZATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_ORGANIZATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [PRODUCT_PRODUCT_GROUP] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;PRODUCT_GROUP_ID\&quot;  guid NOT NULL, \&quot;PRODUCT_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([PRODUCT_ID])        REFERENCES [PRODUCT]([OBJECT_ID]),    FOREIGN KEY ([PRODUCT_GROUP_ID])        REFERENCES [PRODUCT_GROUP]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE PRODUCT_PRODUCT_GROUP;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_PRODUCT_GROUP&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE UNIQUE INDEX [PRODUCT_PRODUCT_GROUP_AK_PRODUCT_PRODUCT_GROUP_PRODUCT_ID]ON [PRODUCT_PRODUCT_GROUP]([PRODUCT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX PRODUCT_PRODUCT_GROUP_AK_PRODUCT_PRODUCT_GROUP_PRODUCT_ID;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_PRODUCT_GROUP_AK_PRODUCT_PRODUCT_GROUP_PRODUCT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE UNIQUE INDEX [PRODUCT_PRODUCT_GROUP_AK_PRODUCT_PRODUCT_GROUP_PRODUCT_ID_GROUP_ID]ON [PRODUCT_PRODUCT_GROUP]([PRODUCT_GROUP_ID], [PRODUCT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX PRODUCT_PRODUCT_GROUP_AK_PRODUCT_PRODUCT_GROUP_PRODUCT_ID_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_PRODUCT_GROUP_AK_PRODUCT_PRODUCT_GROUP_PRODUCT_ID_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [PRODUCT_PRODUCT_GROUP_IDX_PRODUCT_PRODUCT_GROUP_PRODUCT_GROUP_ID]ON [PRODUCT_PRODUCT_GROUP]([PRODUCT_GROUP_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX PRODUCT_PRODUCT_GROUP_IDX_PRODUCT_PRODUCT_GROUP_PRODUCT_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_PRODUCT_GROUP_IDX_PRODUCT_PRODUCT_GROUP_PRODUCT_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [PRODUCT_PRODUCT_GROUP_IDX_PRODUCT_PRODUCT_GROUP_PRODUCT_ID]ON [PRODUCT_PRODUCT_GROUP]([PRODUCT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX PRODUCT_PRODUCT_GROUP_IDX_PRODUCT_PRODUCT_GROUP_PRODUCT_ID;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_PRODUCT_GROUP_IDX_PRODUCT_PRODUCT_GROUP_PRODUCT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING] AFTER INSERT ON PRODUCT_PRODUCT_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'PRODUCT_PRODUCT_GROUP' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING] AFTER UPDATE ON PRODUCT_PRODUCT_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT_PRODUCT_GROUP' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING] AFTER DELETE ON PRODUCT_PRODUCT_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT_PRODUCT_GROUP' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_PRODUCT_PRODUCT_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_TYPE_GROUP] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_TYPE_GROUP;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_TYPE_GROUP&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_TYPE_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_TYPE_GROUP' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_TYPE_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_TYPE_GROUP' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_TYPE_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_TYPE_GROUP' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_TYPE_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_TYPE_GROUP] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_TYPE_GROUP;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_TYPE_GROUP&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION_TYPE_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION_TYPE_GROUP' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION_TYPE_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_TYPE_GROUP' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION_TYPE_GROUP WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_TYPE_GROUP' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_TYPE_GROUP_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [PRODUCT_GROUP_DIVISION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE PRODUCT_GROUP_DIVISION;&quot;,
+            &quot;name&quot; : &quot;PRODUCT_GROUP_DIVISION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING] AFTER INSERT ON PRODUCT_GROUP_DIVISION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'PRODUCT_GROUP_DIVISION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING] AFTER UPDATE ON PRODUCT_GROUP_DIVISION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT_GROUP_DIVISION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING] AFTER DELETE ON PRODUCT_GROUP_DIVISION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'PRODUCT_GROUP_DIVISION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_PRODUCT_GROUP_DIVISION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [EMPLOYEE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;USER_ID\&quot;  guid, \&quot;CODE\&quot;  nvarchar(20) COLLATE NOCASE, \&quot;FIRST_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;LAST_NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;IS_ACTIVE\&quot;  smallint NOT NULL, \&quot;MIDDLE_INITIAL\&quot;  nvarchar(20) COLLATE NOCASE, \&quot;DEPARTMENT\&quot;  nvarchar(70) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE EMPLOYEE;&quot;,
+            &quot;name&quot; : &quot;EMPLOYEE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [EMPLOYEE_IDX_EMPLOYEE_USER_ID]ON [EMPLOYEE]([USER_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX EMPLOYEE_IDX_EMPLOYEE_USER_ID;&quot;,
+            &quot;name&quot; : &quot;EMPLOYEE_IDX_EMPLOYEE_USER_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_EMPLOYEE_CHANGE_TRACKING] AFTER INSERT ON EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'EMPLOYEE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_EMPLOYEE_CHANGE_TRACKING] AFTER UPDATE ON EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'EMPLOYEE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_EMPLOYEE_CHANGE_TRACKING] AFTER DELETE ON EMPLOYEE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'EMPLOYEE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_EMPLOYEE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_EMPLOYEE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_PURPOSE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;ACTIVITY_TYPE_GROUP_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_TYPE_GROUP_ID])        REFERENCES [ACTIVITY_TYPE_GROUP]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_PURPOSE;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_PURPOSE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_PURPOSE_IDX_ACTIVITY_PURPOSE_ACTIVITY_TYPE_GROUP_ID]ON [ACTIVITY_PURPOSE]([ACTIVITY_TYPE_GROUP_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_PURPOSE_IDX_ACTIVITY_PURPOSE_ACTIVITY_TYPE_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_PURPOSE_IDX_ACTIVITY_PURPOSE_ACTIVITY_TYPE_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_PURPOSE_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_PURPOSE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_PURPOSE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_PURPOSE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_PURPOSE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_PURPOSE_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_PURPOSE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_PURPOSE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_PURPOSE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_PURPOSE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_PURPOSE_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_PURPOSE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_PURPOSE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_PURPOSE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_PURPOSE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_STATUS] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;ACTIVITY_STATUS_ID\&quot;  guid, \&quot;ACTIVITY_TYPE_GROUP_ID\&quot;  guid,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_STATUS_ID])        REFERENCES [ACTIVITY_STATUS]([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_TYPE_GROUP_ID])        REFERENCES [ACTIVITY_TYPE_GROUP]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_STATUS;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_STATUS&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_STATUS_IDX_ACTIVITY_STATUS_ACTIVITY_STATUS_ID]ON [ACTIVITY_STATUS]([ACTIVITY_STATUS_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_STATUS_IDX_ACTIVITY_STATUS_ACTIVITY_STATUS_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_STATUS_IDX_ACTIVITY_STATUS_ACTIVITY_STATUS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_STATUS_IDX_ACTIVITY_STATUS_ACTIVITY_TYPE_GROUP_ID]ON [ACTIVITY_STATUS]([ACTIVITY_TYPE_GROUP_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_STATUS_IDX_ACTIVITY_STATUS_ACTIVITY_TYPE_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_STATUS_IDX_ACTIVITY_STATUS_ACTIVITY_TYPE_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_STATUS_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_STATUS' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_STATUS_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_STATUS' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_STATUS_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_STATUS' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_TYPE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;ACTIVITY_TYPE_GROUP_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_TYPE_GROUP_ID])        REFERENCES [ACTIVITY_TYPE_GROUP]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_TYPE;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_TYPE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_TYPE_IDX_ACTIVITY_TYPE_ACTIVITY_TYPE_GROUP_ID]ON [ACTIVITY_TYPE]([ACTIVITY_TYPE_GROUP_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_TYPE_IDX_ACTIVITY_TYPE_ACTIVITY_TYPE_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_TYPE_IDX_ACTIVITY_TYPE_ACTIVITY_TYPE_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_TYPE_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_TYPE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_TYPE_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_TYPE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_TYPE_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_TYPE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ACTIVITY_ROLE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;ACTIVITY_TYPE_GROUP_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ACTIVITY_TYPE_GROUP_ID])        REFERENCES [ACTIVITY_TYPE_GROUP]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ACTIVITY_ROLE;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_ROLE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ACTIVITY_ROLE_IDX_ACTIVITY_ROLE_ACTIVITY_TYPE_GROUP_ID]ON [ACTIVITY_ROLE]([ACTIVITY_TYPE_GROUP_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ACTIVITY_ROLE_IDX_ACTIVITY_ROLE_ACTIVITY_TYPE_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;ACTIVITY_ROLE_IDX_ACTIVITY_ROLE_ACTIVITY_TYPE_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ACTIVITY_ROLE_CHANGE_TRACKING] AFTER INSERT ON ACTIVITY_ROLE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ACTIVITY_ROLE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ACTIVITY_ROLE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ACTIVITY_ROLE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ACTIVITY_ROLE_CHANGE_TRACKING] AFTER UPDATE ON ACTIVITY_ROLE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_ROLE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ACTIVITY_ROLE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ACTIVITY_ROLE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ACTIVITY_ROLE_CHANGE_TRACKING] AFTER DELETE ON ACTIVITY_ROLE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ACTIVITY_ROLE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ACTIVITY_ROLE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ACTIVITY_ROLE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ADDRESS_TYPE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ADDRESS_TYPE;&quot;,
+            &quot;name&quot; : &quot;ADDRESS_TYPE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ADDRESS_TYPE_CHANGE_TRACKING] AFTER INSERT ON ADDRESS_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ADDRESS_TYPE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ADDRESS_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ADDRESS_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ADDRESS_TYPE_CHANGE_TRACKING] AFTER UPDATE ON ADDRESS_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ADDRESS_TYPE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ADDRESS_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ADDRESS_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ADDRESS_TYPE_CHANGE_TRACKING] AFTER DELETE ON ADDRESS_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ADDRESS_TYPE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ADDRESS_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ADDRESS_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CONTACT_TYPE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;TYPE\&quot;  smallint NOT NULL,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CONTACT_TYPE;&quot;,
+            &quot;name&quot; : &quot;CONTACT_TYPE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CONTACT_TYPE_CHANGE_TRACKING] AFTER INSERT ON CONTACT_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CONTACT_TYPE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CONTACT_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CONTACT_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CONTACT_TYPE_CHANGE_TRACKING] AFTER UPDATE ON CONTACT_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CONTACT_TYPE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CONTACT_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CONTACT_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CONTACT_TYPE_CHANGE_TRACKING] AFTER DELETE ON CONTACT_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CONTACT_TYPE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CONTACT_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CONTACT_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CONTACT_ASSIGNATION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;CONTACT_ID\&quot;  guid NOT NULL, \&quot;RELATED_OBJECT_ID\&quot;  guid NOT NULL, \&quot;RALETED_OBJECT_TYPE\&quot;  integer NOT NULL, \&quot;CREATE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CREATE_DATE\&quot;  datetime, \&quot;CHANGE_USER\&quot;  nvarchar(100) COLLATE NOCASE, \&quot;CHANGE_DATE\&quot;  datetime,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([CONTACT_ID])        REFERENCES [CONTACT]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CONTACT_ASSIGNATION;&quot;,
+            &quot;name&quot; : &quot;CONTACT_ASSIGNATION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [CONTACT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RELATED_OBJECT_ID]ON [CONTACT_ASSIGNATION]([RELATED_OBJECT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX CONTACT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RELATED_OBJECT_ID;&quot;,
+            &quot;name&quot; : &quot;CONTACT_ASSIGNATION_IDX_COMMENT_ASSIGNATION_RELATED_OBJECT_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [CONTACT_ASSIGNATION_IDX_CONTACT_ASSIGNATION_ADDRESS_ID]ON [CONTACT_ASSIGNATION]([CONTACT_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX CONTACT_ASSIGNATION_IDX_CONTACT_ASSIGNATION_ADDRESS_ID;&quot;,
+            &quot;name&quot; : &quot;CONTACT_ASSIGNATION_IDX_CONTACT_ASSIGNATION_ADDRESS_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [CONTACT_ASSIGNATION_IDX_CONTACT_ASSIGNATION_RALETED_OBJECT_TYPE]ON [CONTACT_ASSIGNATION]([RALETED_OBJECT_TYPE]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX CONTACT_ASSIGNATION_IDX_CONTACT_ASSIGNATION_RALETED_OBJECT_TYPE;&quot;,
+            &quot;name&quot; : &quot;CONTACT_ASSIGNATION_IDX_CONTACT_ASSIGNATION_RALETED_OBJECT_TYPE&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CONTACT_ASSIGNATION_CHANGE_TRACKING] AFTER INSERT ON CONTACT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CONTACT_ASSIGNATION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CONTACT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CONTACT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CONTACT_ASSIGNATION_CHANGE_TRACKING] AFTER UPDATE ON CONTACT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CONTACT_ASSIGNATION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CONTACT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CONTACT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CONTACT_ASSIGNATION_CHANGE_TRACKING] AFTER DELETE ON CONTACT_ASSIGNATION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CONTACT_ASSIGNATION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CONTACT_ASSIGNATION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CONTACT_ASSIGNATION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CUSTOMER_IMPORTANCE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CUSTOMER_IMPORTANCE;&quot;,
+            &quot;name&quot; : &quot;CUSTOMER_IMPORTANCE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CUSTOMER_IMPORTANCE_CHANGE_TRACKING] AFTER INSERT ON CUSTOMER_IMPORTANCE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CUSTOMER_IMPORTANCE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CUSTOMER_IMPORTANCE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CUSTOMER_IMPORTANCE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CUSTOMER_IMPORTANCE_CHANGE_TRACKING] AFTER UPDATE ON CUSTOMER_IMPORTANCE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_IMPORTANCE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CUSTOMER_IMPORTANCE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CUSTOMER_IMPORTANCE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CUSTOMER_IMPORTANCE_CHANGE_TRACKING] AFTER DELETE ON CUSTOMER_IMPORTANCE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_IMPORTANCE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CUSTOMER_IMPORTANCE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CUSTOMER_IMPORTANCE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CUSTOMER_POSITION] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CUSTOMER_POSITION;&quot;,
+            &quot;name&quot; : &quot;CUSTOMER_POSITION&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CUSTOMER_POSITION_CHANGE_TRACKING] AFTER INSERT ON CUSTOMER_POSITION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CUSTOMER_POSITION' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CUSTOMER_POSITION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CUSTOMER_POSITION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CUSTOMER_POSITION_CHANGE_TRACKING] AFTER UPDATE ON CUSTOMER_POSITION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_POSITION' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CUSTOMER_POSITION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CUSTOMER_POSITION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CUSTOMER_POSITION_CHANGE_TRACKING] AFTER DELETE ON CUSTOMER_POSITION WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_POSITION' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CUSTOMER_POSITION_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CUSTOMER_POSITION_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CUSTOMER_STATUS] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CUSTOMER_STATUS;&quot;,
+            &quot;name&quot; : &quot;CUSTOMER_STATUS&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CUSTOMER_STATUS_CHANGE_TRACKING] AFTER INSERT ON CUSTOMER_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CUSTOMER_STATUS' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CUSTOMER_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CUSTOMER_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CUSTOMER_STATUS_CHANGE_TRACKING] AFTER UPDATE ON CUSTOMER_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_STATUS' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CUSTOMER_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CUSTOMER_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CUSTOMER_STATUS_CHANGE_TRACKING] AFTER DELETE ON CUSTOMER_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_STATUS' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CUSTOMER_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CUSTOMER_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [CUSTOMER_TYPE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE CUSTOMER_TYPE;&quot;,
+            &quot;name&quot; : &quot;CUSTOMER_TYPE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_CUSTOMER_TYPE_CHANGE_TRACKING] AFTER INSERT ON CUSTOMER_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'CUSTOMER_TYPE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_CUSTOMER_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_CUSTOMER_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_CUSTOMER_TYPE_CHANGE_TRACKING] AFTER UPDATE ON CUSTOMER_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_TYPE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_CUSTOMER_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_CUSTOMER_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_CUSTOMER_TYPE_CHANGE_TRACKING] AFTER DELETE ON CUSTOMER_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'CUSTOMER_TYPE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_CUSTOMER_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_CUSTOMER_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_TYPE] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;ORGANIZATION_TYPE_GROUP_ID\&quot;  guid NOT NULL,    PRIMARY KEY ([OBJECT_ID]),    FOREIGN KEY ([ORGANIZATION_TYPE_GROUP_ID])        REFERENCES [ORGANIZATION_TYPE_GROUP]([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_TYPE;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_TYPE&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE INDEX [ORGANIZATION_TYPE_IDX_ORGANIZATION_TYPE_ORGANIZATION_TYPE_GROUP_ID]ON [ORGANIZATION_TYPE]([ORGANIZATION_TYPE_GROUP_ID]);&quot;,
+            &quot;drop&quot; : &quot;DROP INDEX ORGANIZATION_TYPE_IDX_ORGANIZATION_TYPE_ORGANIZATION_TYPE_GROUP_ID;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_TYPE_IDX_ORGANIZATION_TYPE_ORGANIZATION_TYPE_GROUP_ID&quot;,
+            &quot;type&quot; : &quot;INDEX&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_TYPE_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION_TYPE' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_TYPE_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_TYPE' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_TYPE_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION_TYPE WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_TYPE' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_TYPE_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_TYPE_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TABLE [ORGANIZATION_STATUS] ( \&quot;OBJECT_ID\&quot;  guid NOT NULL, \&quot;NAME\&quot;  nvarchar(200) COLLATE NOCASE, \&quot;DESCRIPTION\&quot;  nvarchar(2000) COLLATE NOCASE, \&quot;IS_ACTIVE\&quot;  smallint NOT NULL,    PRIMARY KEY ([OBJECT_ID]));&quot;,
+            &quot;drop&quot; : &quot;DROP TABLE ORGANIZATION_STATUS;&quot;,
+            &quot;name&quot; : &quot;ORGANIZATION_STATUS&quot;,
+            &quot;type&quot; : &quot;TABLE&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TI_ORGANIZATION_STATUS_CHANGE_TRACKING] AFTER INSERT ON ORGANIZATION_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN     INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT NEW.OBJECT_ID, 'ORGANIZATION_STATUS' AS [TABLE_NAME], 1 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TI_ORGANIZATION_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TI_ORGANIZATION_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TU_ORGANIZATION_STATUS_CHANGE_TRACKING] AFTER UPDATE ON ORGANIZATION_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_STATUS' AS [TABLE_NAME], 2 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TU_ORGANIZATION_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TU_ORGANIZATION_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        },
+        {
+            &quot;create&quot; : &quot;CREATE TRIGGER [TD_ORGANIZATION_STATUS_CHANGE_TRACKING] AFTER DELETE ON ORGANIZATION_STATUS WHEN (SELECT DISTINCT PARAMETER_VALUE FROM CONFIGURATION WHERE PARAMETER_NAME = 'TRIGGERS_ENABLE' LIMIT 1)='TRUE' BEGIN    INSERT INTO CHANGE_TRACKING (RELATED_OBJECT_ID, TABLE_NAME, CHANGE_TYPE)    SELECT OLD.OBJECT_ID, 'ORGANIZATION_STATUS' AS [TABLE_NAME], 4 AS [CHANGE_TYPE]; END;&quot;,
+            &quot;drop&quot; : &quot;DROP TRIGGER TD_ORGANIZATION_STATUS_CHANGE_TRACKING;&quot;,
+            &quot;name&quot; : &quot;TD_ORGANIZATION_STATUS_CHANGE_TRACKING&quot;,
+            &quot;type&quot; : &quot;TRIGGER&quot;
+        }
+    ]
+};
+ </pre>
+</body>
+</html>
